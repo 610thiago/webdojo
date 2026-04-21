@@ -1,0 +1,44 @@
+{
+  "personal": {
+    "name": "Thiago Souza Ribeiro",
+    "email": "610thiago@gmail.com",
+    "phone": "41 99916-3434",
+    "consultancyType": "Individual",
+    "personType": "cpf",
+    "document": "07559033903",
+    "discoveryChannels": [
+      "Instagram",
+      "LinkedIn",
+      "Udemy",
+      "YouTube",
+      "Indicação de Amigo"
+    ],
+    "file": "./cypress/fixtures/document.pdf",
+    "description": "Lorem ipsum dolor sit amet",
+    "techs": [
+      "Cypress",
+      "Selenium",
+      "WebDriverIo",
+      "Playwright",
+      "Robot Framework"
+    ],
+    "terms": true
+  },
+  "company": {
+    "name": "Thiago Souza Ribeiro",
+    "email": "610thiago@gmail.com",
+    "phone": "41 99916-3434",
+    "consultancyType": "In Company",
+    "personType": "cnpj",
+    "document": "02.237.358/0001-68",
+    "discoveryChannels": [
+      "LinkedIn"
+    ],
+    "file": "./cypress/fixtures/document.pdf",
+    "description": "Lorem ipsum dolor sit amet",
+    "techs": [
+      "Cypress"
+    ],
+    "terms": true
+  }
+}
