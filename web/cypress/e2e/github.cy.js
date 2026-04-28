@@ -1,86 +1,75 @@
-describe('Gerenciamento de Perfis no Github', () => {
+/// <reference types="cypress" />
+import { faker } from '@faker-js/faker';
+import _ from 'lodash'
 
-    beforeEach(() => {
-        // ESSA PARTE É ESSENCIAL:
-        cy.login()
-        cy.goTo('Tabela', 'Perfis do GitHub')
+describe('Expert', () => {
+  beforeEach(() => {
+    cy.start()
+  })
+
+  it('Deve manipular os atributos de elementos do HTML com invoke', () => {
+    // O invoke pode alterar a propriedade de um elemento, o val abaixo é o value
+    cy.get('#email').invoke('val', 'leonardo@teste.com')
+
+    cy.get('#password').invoke('removeAttr', 'class')
+
+    cy.get('#password').invoke('attr', 'type', 'text')
+      .type('pwd123')
+
+    cy.contains('button', 'Entrar')
+      .invoke('hide')
+      .should('not.be.visible')
+
+    cy.contains('button', 'Entrar')
+      .invoke('show')
+      .should('be.visible')
+  })
+
+  it('Não deve logar com senha inválida', () => {
+    // docs.cypress.io/api/commands/type
+    cy.get('#email').type('papito@webdojo.com')
+    cy.get('#password').type('asdfasdf{Enter}')
+
+    // Salvando o html da página
+/*     cy.wait(2500)
+    cy.document().then((doc) => {
+      cy.writeFile('cypress/downloads/page.html', doc.documentElement.outerHTML)
+    }) */
+
+    cy.get('[data-sonner-toaster="true"]')
+      .should('be.visible')
+      .as('toast')
+
+    cy.get('@toast')
+      .find('.title')
+      .should('have.text', 'Acesso negado! Tente novamente.')
+
+    cy.wait(5000)
+
+    cy.get('@toast')
+      .should('not.exist')
+  })
+
+  it('Simulando a tecla TAB com cy.press()', () => {
+    cy.get('body').press('Tab')
+    cy.focused().should('have.attr', 'id', 'email')
+
+    cy.get('#email').press('Tab')
+    cy.focused()
+    cy.focused().should('have.attr', 'id', 'password')
+
+  })
+
+  it('Deve realizar uma carga de dados fakes', () => {
+
+    _.times(5, () => {
+      const name = faker.person.fullName()
+      const email = faker.internet.email()
+      const password = 'pwd'
+
+      cy.log(name)
+      cy.log(email)
+      cy.log(password)
     })
-
-    it('Deve poder cadastrar um novo perfil do github', () => {
-        // Primeiro cadastro
-        cy.get('#name').type('Fernando Papito')
-        cy.get('#username').type('qapapito')
-        cy.get('#profile').type('QA')
-
-        cy.contains('button', 'Adicionar Perfil').click()
-
-        // Segundo cadastro
-        cy.get('#name').type('Fernando Papito')
-        cy.get('#username').type('papitodev')
-        cy.get('#profile').type('QA')
-
-        cy.contains('button', 'Adicionar Perfil').click()
-
-        // Validações na tabela utilizando Alias (as)
-        cy.contains('table tbody tr', 'papitodev')
-            .should('be.visible')
-            .as('trProfile')
-
-        cy.get('@trProfile')
-            .contains('td', 'Fernando Papito')
-            .should('be.visible')
-
-        cy.get('@trProfile')
-            .contains('td', 'QA')
-            .should('be.visible')
-    })
-
-    it('Deve poder remover um perfil do github', () => {
-
-        const profile = {
-            name: 'Fernando Papito',
-            username: 'papito123',
-            desc: 'QA'
-        }
-
-        cy.get('#name').type(profile.name)
-        cy.get('#username').type(profile.username)
-        cy.get('#profile').type(profile.desc)
-
-        cy.contains('button', 'Adicionar Perfil').click()
-
-        cy.contains('table tbody tr', profile.username)
-            .should('be.visible')
-            .as('trProfile')
-
-        cy.get('@trProfile').find('button[title="Remover perfil"]').click()
-
-        cy.contains('table tbody', profile.username)
-            .should('not.exist')
-    })
-
-    it('Deve validar o link do github', () => {
-
-        const profile = {
-            name: 'Fernando Papito',
-            username: 'papitodev',
-            desc: 'QA'
-        }
-
-        cy.get('#name').type(profile.name)
-        cy.get('#username').type(profile.username)
-        cy.get('#profile').type(profile.desc)
-
-        cy.contains('button', 'Adicionar Perfil').click()
-
-        cy.contains('table tbody tr', profile.username)
-            .should('be.visible')
-            .as('trProfile')
-
-        cy.get('@trProfile').find('a')
-            .should('have.attr', 'href', 'https://github.com/' + profile.username)
-            .and('have.attr', 'target', '_blank')
-
-
-    })
+  })
 })
